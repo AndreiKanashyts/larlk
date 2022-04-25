@@ -62,7 +62,7 @@
 
     <!-- Main Sidebar Container -->
 
-    @include('admin.includes.sidebar')
+    @include('upa.includes.sidebar')
     @yield('content')
 
     <footer class="main-footer">

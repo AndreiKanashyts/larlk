@@ -1,4 +1,4 @@
-@extends('admin.layouts.main')
+@extends('upa.layouts.main')
 @section('content')
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -11,7 +11,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{route('admin.main.index')}}">Главная</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('upa.main.index')}}">Главная</a></li>
                         <li class="breadcrumb-item active">Замечания</li>
                     </ol>
                 </div><!-- /.col -->

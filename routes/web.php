@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\Main\IndexController as IndexController;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\HomeController;
 //use App\Http\Controllers\Admin\Main\IndexController as IndexController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Main\IndexController as IndexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,17 +18,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['namespace' => 'App\Http\Controllers\Main'], function () {
-    Route::get('/', IndexController::class);
-});
+Route::get('/', 'HomeController');
 
-Route::group(['namespace' => 'App\Http\Controller\Admin', 'prefix' => 'admin', 'middleware' => ['auth']], function () {
-    Route::group(['namespace' => '\App\Http\Controllers\Admin\Main'], function () {
-        Route::get('/', \App\Http\Controllers\Admin\Main\IndexController::class)->name('admin.main.index');
+Route::group(['namespace' => 'App\Http\Controller\Upa', 'prefix' => 'upa', 'middleware' => ['auth']], function () {
+    Route::group(['namespace' => '\App\Http\Controllers\Upa\Main'], function () {
+        Route::get('/', \App\Http\Controllers\Upa\Main\IndexController::class)->name('upa.main.index');
     });
 
-    Route::group(['namespace' => '\App\Http\Controllers\Admin\Comment', 'prefix' => 'comments'], function () {
-        Route::get('/', \App\Http\Controllers\Admin\Comment\IndexController::class)->name('admin.comment.index');
+    Route::group(['namespace' => '\App\Http\Controllers\Upa\Comment', 'prefix' => 'comments'], function () {
+        Route::get('/', \App\Http\Controllers\Upa\Comment\IndexController::class)->name('upa.comment.index');
     });
 });
 
