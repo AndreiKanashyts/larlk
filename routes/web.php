@@ -5,7 +5,7 @@ use App\Http\Controllers\HomeController;
 //use App\Http\Controllers\Admin\Main\IndexController as IndexController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Main\IndexController as IndexController;
+//use App\Http\Controllers\Main\IndexController as IndexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +18,9 @@ use App\Http\Controllers\Main\IndexController as IndexController;
 |
 */
 
-Route::get('/', 'HomeController');
+Route::group(['namespase' => 'Start'], function () {
+    Route::get('/', \App\Http\Controllers\Start\IndexController::class);
+});
 
 Route::group(['namespace' => 'App\Http\Controller\Upa', 'prefix' => 'upa', 'middleware' => ['auth']], function () {
     Route::group(['namespace' => '\App\Http\Controllers\Upa\Main'], function () {
