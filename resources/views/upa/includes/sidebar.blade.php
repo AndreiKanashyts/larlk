@@ -21,6 +21,14 @@
                     </p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{route('upa.control.index')}}" class="nav-link">
+                    <i class="nav-icon fas fa-book"></i>
+                    <p>
+                        Контроль
+                    </p>
+                </a>
+            </li>
         </ul>
     </div>
     <!-- /.sidebar -->

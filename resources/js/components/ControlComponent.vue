@@ -37,7 +37,7 @@
             </div>
             <div class="mb-3">
                 <input
-                    @click.prevent="getComments"
+                    @click.prevent="getControls"
                     type="submit"
                     value="Обновить"
                     class="btn btn-primary"
@@ -48,78 +48,48 @@
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Дата</th>
-                    <th scope="col">Вид замечания</th>
-                    <th scope="col">Текст замечания</th>
-                    <th scope="col">Стоимость</th>
+                    <th scope="col">Дата и время звонка</th>
+                    <th scope="col">ФИО сотрудника</th>
+                    <th scope="col">Номер/ID</th>
+                    <th scope="col">Оценка</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="comment in paginatedComments" :key="comment.id">
-                    <th>{{ comment.id }}</th>
-                    <td>{{ comment.date.date | date }}</td>
-                    <td>{{ comment.name }}</td>
-                    <td>{{ comment.description }}</td>
-                    <td>{{ comment.cost }}</td>
+                <tr v-for="(control, idx) in controls" :key="control.id">
+                    <th>{{ idx + 1 }}</th>
+                    <td>{{ control.dateCall.date | date("datetime") }}</td>
+                    <td>{{ control.fullName }}</td>
+                    <td>{{ control.phoneClient }}</td>
+                    <td>{{ control.score }}</td>
                 </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li
-                    class="page-item"
-                    v-for="page in pages"
-                    :key="page"
-                    :class="{ 'page-item active': page === pageNumber }"
-                    @click.prevent="pageClick(page)"
-                >
-                    <ul class="page-link">
-                        {{
-                            page
-                        }}
-                    </ul>
-                </li>
-            </ul>
-        </nav>
     </div>
 </template>
 
 <script>
 export default {
-    name: "CommentComponent",
+    name: "ControlComponent",
 
     props: ["authoperator"],
 
     data() {
         return {
-            comments: "",
-            userPerPage: 5,
-            pageNumber: 1,
+            controls: "",
             upMonth: 5,
             upYear: 2022,
         };
     },
 
-    computed: {
-        pages() {
-            return Math.ceil(this.comments.length / 5);
-        },
-        paginatedComments() {
-            let from = (this.pageNumber - 1) * this.userPerPage;
-            let to = from + this.userPerPage;
-            return this.comments.slice(from, to);
-        },
-    },
-
     mounted() {
-        this.getComments();
+        this.getControls();
     },
 
     methods: {
-        getComments() {
+        getControls() {
             axios
                 .get(
-                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetMistake.php",
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAssessment.php",
                     {
                         params: {
                             Month: `${this.upMonth}`,
@@ -129,14 +99,11 @@ export default {
                     }
                 )
                 .then((response) => {
-                    this.comments = response.data;
+                    this.controls = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-        },
-        pageClick(page) {
-            this.pageNumber = page;
         },
     },
 };
