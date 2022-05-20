@@ -44,7 +44,7 @@
                 />
             </div>
         </div>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
@@ -52,32 +52,53 @@
                     <th scope="col">ФИО сотрудника</th>
                     <th scope="col">Номер/ID</th>
                     <th scope="col">Оценка</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Чек-лист</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(control, idx) in controls" :key="control.id">
+                <tr v-for="(control, idx) in controls" :key="control.IdCall">
                     <th>{{ idx + 1 }}</th>
                     <td>{{ control.dateCall.date | date("datetime") }}</td>
                     <td>{{ control.fullName }}</td>
                     <td>{{ control.phoneClient }}</td>
                     <td>{{ control.score }}</td>
+                    <td>{{ control.nameStatus }}</td>
+                    <td>
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            @click.prevent="takeIdCall(control.IdCall)"
+                        >
+                            Подробнее
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
+        <CheckComponent :editIdCall="editIdCall" ref="chekapp"></CheckComponent>
     </div>
 </template>
 
 <script>
+import CheckComponent from "./CheckComponent.vue";
 export default {
     name: "ControlComponent",
+
+    components: {
+        CheckComponent,
+    },
 
     props: ["authoperator"],
 
     data() {
         return {
-            controls: "",
+            controls: [],
             upMonth: 5,
             upYear: 2022,
+            editIdCall: "",
         };
     },
 
@@ -104,6 +125,10 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+
+        takeIdCall(IdCall) {
+            this.editIdCall = IdCall;
         },
     },
 };
