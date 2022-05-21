@@ -28546,35 +28546,39 @@ var render = function () {
         },
       },
       [
-        _c("div", { staticClass: "modal-dialog modal-dialog-scrollable" }, [
-          _vm.editIdCall
-            ? _c("div", { staticClass: "modal-content" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-body" }, [
-                  _c("table", { staticClass: "table table-bordered" }, [
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.checks, function (check) {
-                        return _c("tr", { key: check.id }, [
-                          _c("th", [_vm._v(_vm._s(check.nameQuestion))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(check.nameOption))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(check.currentWeight))]),
-                        ])
-                      }),
-                      0
-                    ),
+        _c(
+          "div",
+          { staticClass: "modal-dialog modal-dialog-scrollable modal-lg" },
+          [
+            _vm.editIdCall
+              ? _c("div", { staticClass: "modal-content" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c("table", { staticClass: "table table-bordered" }, [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.checks, function (check) {
+                          return _c("tr", { key: check.id }, [
+                            _c("th", [_vm._v(_vm._s(check.nameQuestion))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(check.nameOption))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(check.currentWeight))]),
+                          ])
+                        }),
+                        0
+                      ),
+                    ]),
                   ]),
-                ]),
-                _vm._v(" "),
-                _vm._m(2),
-              ])
-            : _vm._e(),
-        ]),
+                  _vm._v(" "),
+                  _vm._m(2),
+                ])
+              : _vm._e(),
+          ]
+        ),
       ]
     ),
   ])
@@ -28588,7 +28592,7 @@ var staticRenderFns = [
       _c(
         "h5",
         { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
-        [_vm._v("\n                        Чек-лист:\n                    ")]
+        [_vm._v("\n                        Чек-лист\n                    ")]
       ),
       _vm._v(" "),
       _c("button", {

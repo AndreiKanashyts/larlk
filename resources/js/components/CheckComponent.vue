@@ -7,11 +7,11 @@
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
         >
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content" v-if="editIdCall">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
-                            Чек-лист:
+                            Чек-лист
                         </h5>
                         <button
                             type="button"
