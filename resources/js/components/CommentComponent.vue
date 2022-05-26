@@ -47,7 +47,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">ID</th>
+                    <th scope="col">№</th>
                     <th scope="col">Дата</th>
                     <th scope="col">Вид замечания</th>
                     <th scope="col">Текст замечания</th>
@@ -56,7 +56,7 @@
             </thead>
             <tbody>
                 <tr v-for="comment in paginatedComments" :key="comment.id">
-                    <th>{{ comment.id }}</th>
+                    <th>{{ comment.number }}</th>
                     <td>{{ comment.date.date | date }}</td>
                     <td>{{ comment.name }}</td>
                     <td>{{ comment.description }}</td>

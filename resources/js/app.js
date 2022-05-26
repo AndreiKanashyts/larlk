@@ -2,7 +2,8 @@ import Vue from "vue";
 import dateFilter from "./filters/date.filter";
 import CommentComponent from "./components/CommentComponent";
 import ControlComponent from "./components/ControlComponent";
-import CheckComponent from "./components/CheckComponent";
+import PopupControl from "./components/popup/PopupControl";
+import PopupComment from "./components/popup/PopupComment";
 
 require("./bootstrap");
 
@@ -14,6 +15,7 @@ const app = new Vue({
     components: {
         CommentComponent,
         ControlComponent,
-        CheckComponent,
+        PopupControl,
+        PopupComment,
     },
 });
