@@ -2,7 +2,7 @@
     <div>
         <div
             class="modal fade"
-            id="exampleModal"
+            id="popupControlModal"
             tabindex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"

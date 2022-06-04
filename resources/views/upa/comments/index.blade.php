@@ -15,9 +15,6 @@
                         <li class="breadcrumb-item active">Замечания</li>
                     </ol>
                 </div><!-- /.col -->
-                <div>
-                    <comment-component :authoperator='@json($auth_operator)'></comment-component>
-                </div>
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
@@ -25,16 +22,9 @@
 
     <!-- Main content -->
     <section class="content">
-        <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
-            <div class="row">
-                <div class="col-12">
-
-                </div>
-                <!-- ./col -->
-            </div>
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        <div>
+            <comment-component :authoperator='@json($auth_operator)'></comment-component>
+        </div>
     </section>
     <!-- /.content -->
 </div>

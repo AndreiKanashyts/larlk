@@ -44,7 +44,12 @@
                 />
             </div>
         </div>
-        <table class="table table-bordered">
+
+        <p class="center" v-if="!comments.length">
+            Замечаний в этом месяце нет!
+        </p>
+
+        <table class="table table-bordered" v-else>
             <thead>
                 <tr>
                     <th scope="col">№</th>
@@ -95,7 +100,7 @@ export default {
             comments: "",
             userPerPage: 5,
             pageNumber: 1,
-            upMonth: 5,
+            upMonth: 6,
             upYear: 2022,
         };
     },
@@ -117,6 +122,7 @@ export default {
 
     methods: {
         getComments() {
+            this.pageNumber = 1;
             axios
                 .get(
                     "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetMistake.php",

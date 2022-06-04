@@ -21,7 +21,11 @@
 
     <!-- Main content -->
     <section class="content">
-        <div class="container-fluid">
+        <div class="d-grid gap-2">
+            <a class="btn btn-primary" href="{{route('upa.comment.index')}}" role="button">Перейти к Замечаниям</a>
+            <a class="btn btn-primary" href="{{route('upa.control.index')}}" role="button">Перейти к Контролю качества</a>
+          </div>
+        {{-- <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-lg-3 col-6">
@@ -86,7 +90,8 @@
                 <!-- ./col -->
             </div>
             <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div> --}}
+        <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
 </div>
