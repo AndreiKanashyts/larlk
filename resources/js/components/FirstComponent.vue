@@ -98,12 +98,13 @@ export default {
     data() {
         return {
             startInfo: [],
-            upMonth: 6,
+            upMonth: 1,
             upYear: 2022,
         };
     },
 
     mounted() {
+        this.getNewDate();
         this.getStartInfo();
     },
 
@@ -126,6 +127,13 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+        getNewDate() {
+            let dateNaw = new Date();
+            let monthNaw = dateNaw.getMonth() + 1;
+            let yearNaw = dateNaw.getFullYear();
+            this.upMonth = monthNaw;
+            this.upYear = yearNaw;
         },
     },
 };

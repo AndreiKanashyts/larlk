@@ -309,8 +309,8 @@ export default {
     },
 
     mounted() {
-        this.getControls();
         this.getNewDate();
+        this.getControls();
     },
 
     methods: {

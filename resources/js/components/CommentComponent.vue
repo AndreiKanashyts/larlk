@@ -117,8 +117,8 @@ export default {
     },
 
     mounted() {
-        this.getComments();
         this.getNewDate();
+        this.getComments();
     },
 
     methods: {
