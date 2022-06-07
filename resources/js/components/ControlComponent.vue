@@ -410,6 +410,7 @@ export default {
                         {
                             params: {
                                 IdCall: `${this.editIdCall}`,
+                                login: `${this.authoperator.LoginOperator}`,
                             },
                         }
                     )

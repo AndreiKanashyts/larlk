@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Upa\Comment;
+namespace App\Http\Controllers\Upa\Helper;
 
 use App\Http\Controllers\Controller;
 use Auth;
@@ -15,7 +15,7 @@ class IndexController extends Controller
             'LoginOperator' => Auth::user()->email
         ];
 
-        return view('upa.comments.index', [
+        return view('upa.helpers.index', [
             'auth_operator' => $auth_operator
         ]);
     }

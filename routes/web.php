@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Auth;
 //use App\Http\Controllers\Admin\Main\IndexController as IndexController;
 use Illuminate\Support\Facades\Route;
+//use App\Http\Controllers\Upa\Helper\IndexController;
 //use App\Http\Controllers\HomeController;
 //use App\Http\Controllers\Upa\Control\IndexController;
 //use App\Http\Controllers\Main\IndexController as IndexController;
@@ -34,6 +35,10 @@ Route::group(['namespace' => 'App\Http\Controller\Upa', 'prefix' => 'upa', 'midd
 
     Route::group(['namespace' => '\App\Http\Controllers\Upa\Control', 'prefix' => 'controls'], function () {
         Route::get('/', \App\Http\Controllers\Upa\Control\IndexController::class)->name('upa.control.index');
+    });
+
+    Route::group(['namespace' => '\App\Http\Controllers\Upa\Helper', 'prefix' => 'helpers'], function () {
+        Route::get('/', \App\Http\Controllers\Upa\Helper\IndexController::class)->name('upa.helper.index');
     });
 });
 

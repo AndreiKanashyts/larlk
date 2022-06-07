@@ -61,19 +61,12 @@
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-
     @include('upa.includes.sidebar')
+    <!-- /.sidebar -->
+
+    <!-- Content -->
     @yield('content')
-
-    <footer class="main-footer">
-        <strong>Личный кабинет</strong>
-    </footer>
-
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
+    <!-- /.content -->
 </div>
 <!-- ./wrapper -->
 
