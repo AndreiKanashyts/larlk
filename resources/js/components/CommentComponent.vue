@@ -100,7 +100,7 @@ export default {
             comments: "",
             userPerPage: 5,
             pageNumber: 1,
-            upMonth: 6,
+            upMonth: 1,
             upYear: 2022,
         };
     },
@@ -118,6 +118,7 @@ export default {
 
     mounted() {
         this.getComments();
+        this.getNewDate();
     },
 
     methods: {
@@ -143,6 +144,13 @@ export default {
         },
         pageClick(page) {
             this.pageNumber = page;
+        },
+        getNewDate() {
+            let dateNaw = new Date();
+            let monthNaw = dateNaw.getMonth() + 1;
+            let yearNaw = dateNaw.getFullYear();
+            this.upMonth = monthNaw;
+            this.upYear = yearNaw;
         },
     },
 };

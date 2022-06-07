@@ -2,7 +2,7 @@
     <div>
         <table>
             <col width="250" valign="top" />
-            <col width="250" valign="top" />
+            <col width="1000" valign="top" />
             <tr>
                 <td>
                     <div>
@@ -282,7 +282,7 @@ export default {
     data() {
         return {
             controls: [],
-            upMonth: 6,
+            upMonth: 1,
             upYear: 2022,
             editIdCall: "",
             editPhone: "",
@@ -310,6 +310,7 @@ export default {
 
     mounted() {
         this.getControls();
+        this.getNewDate();
     },
 
     methods: {
@@ -435,6 +436,20 @@ export default {
         pageClick(page) {
             this.pageNumber = page;
         },
+        getNewDate() {
+            let dateNaw = new Date();
+            let monthNaw = dateNaw.getMonth() + 1;
+            let yearNaw = dateNaw.getFullYear();
+            this.upMonth = monthNaw;
+            this.upYear = yearNaw;
+        },
     },
 };
 </script>
+
+<style scoped>
+audio {
+    width: 100%;
+    height: 30px;
+}
+</style>
