@@ -309,7 +309,7 @@ export default {
 };
 function getUserFullName() {
     $.ajax({
-        method: "POST",
+        method: "GET",
         url: "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetUserFullName.php",
     }).done(function (response) {
         addtoListFullName(response);
