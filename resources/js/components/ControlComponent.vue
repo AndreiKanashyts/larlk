@@ -88,19 +88,89 @@
                     <td>{{ control.score }}</td>
                     <td>{{ control.nameStatus }}</td>
                     <td>
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#popupControlModal"
-                            @click.prevent="
-                                takeIdCall(control.IdCall, control.phoneClient),
-                                    getControlCheck(control.IdCall),
-                                    getPhoneComments(control.IdCall)
-                            "
-                        >
-                            Подробнее
-                        </button>
+                        <div class="btn-group">
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#popupControlModal"
+                                @click.prevent="
+                                    takeIdCall(
+                                        control.IdCall,
+                                        control.phoneClient
+                                    ),
+                                        getControlCheck(control.IdCall),
+                                        getPhoneComments(control.IdCall)
+                                "
+                            >
+                                Подробнее
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <span class="visually-hidden"
+                                    >Переключатель выпадающего списка</span
+                                >
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="ml-3">
+                                    <button
+                                        type="button"
+                                        :disabled="
+                                            control.IdStatus === 2 ||
+                                            control.IdStatus === 4 ||
+                                            control.IdStatus === 5 ||
+                                            control.IdStatus === 6 ||
+                                            control.IdStatus === 7 ||
+                                            control.IdStatus === 8
+                                        "
+                                        class="btn btn-outline-success"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#alertControlStatus"
+                                        @click.prevent="
+                                            takeIdCall(
+                                                control.IdCall,
+                                                control.phoneClient,
+                                                control.IdStatus
+                                            ),
+                                                getPhoneComments(control.IdCall)
+                                        "
+                                    >
+                                        Принять
+                                    </button>
+                                </li>
+                                <li class="ml-3 mt-1">
+                                    <button
+                                        type="button"
+                                        :disabled="
+                                            control.IdStatus === 2 ||
+                                            control.IdStatus === 3 ||
+                                            control.IdStatus === 4 ||
+                                            control.IdStatus === 5 ||
+                                            control.IdStatus === 6 ||
+                                            control.IdStatus === 7 ||
+                                            control.IdStatus === 8
+                                        "
+                                        class="btn btn-outline-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-dispute"
+                                        @click.prevent="
+                                            takeIdCall(
+                                                control.IdCall,
+                                                control.phoneClient,
+                                                control.IdStatus
+                                            ),
+                                                getPhoneComments(control.IdCall)
+                                        "
+                                    >
+                                        Не согласен
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                     <td>
                         <button
@@ -234,19 +304,43 @@
                         </tr>
                     </tbody>
                 </table>
+                <div :class="{ 'd-none': checkVisible === true }" class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label"
+                        >Введите ваш комментарий:</label
+                    >
+                    <textarea
+                        class="form-control"
+                        id="exampleFormControlTextarea1"
+                        placeholder="Перед отправкой комментария введите сообщение"
+                        aria-label="Перед отправкой комментария введите сообщение"
+                        rows="3"
+                        v-model="commentDispute"
+                    >
+                    </textarea>
+                    <button
+                        :disabled="!isDisabledAddComment"
+                        type="button"
+                        class="btn btn-danger mt-3"
+                        @click.prevent="
+                            addComment(), getControls(), getPhoneComments()
+                        "
+                    >
+                        Отправить комментарий
+                    </button>
+                </div>
             </template>
             <template v-slot:footer>
                 <button
                     type="button"
                     class="btn btn-primary"
-                    @click="swapTablesCheck"
+                    @click.prevent="swapTablesCheck"
                 >
                     Чек-лист
                 </button>
                 <button
                     type="button"
                     class="btn btn-success"
-                    @click="swapTablesComment"
+                    @click.prevent="swapTablesComment"
                 >
                     Комментарии
                 </button>
@@ -259,17 +353,113 @@
                 </button>
             </template>
         </PopupControl>
+        <PopupDispute>
+            <template v-slot:headerDispute>
+                Информация по номеру: {{ editPhone }}
+            </template>
+            <template v-slot:bodyDispute>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Автор</th>
+                            <th scope="col">Временная метка</th>
+                            <th scope="col">Комментарий</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="phoneComment in phoneComments"
+                            :key="phoneComment.id"
+                            :class="[phoneComment.classMarcup]"
+                        >
+                            <td>
+                                {{
+                                    phoneComment.dateTime.date
+                                        | date("datetime")
+                                }}
+                            </td>
+                            <td>{{ phoneComment.fullName }}</td>
+                            <td>{{ phoneComment.timeMark }}</td>
+                            <td>{{ phoneComment.comment }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label"
+                        >Введите ваш комментарий:</label
+                    >
+                    <textarea
+                        class="form-control"
+                        id="exampleFormControlTextarea1"
+                        placeholder="Перед отправкой комментария введите сообщение"
+                        aria-label="Перед отправкой комментария введите сообщение"
+                        rows="3"
+                        v-model="commentDispute"
+                    >
+                    </textarea>
+                </div>
+            </template>
+            <template v-slot:footerDispute>
+                <button
+                    :disabled="!isDisabledAddComment"
+                    type="button"
+                    class="btn btn-danger"
+                    @click.prevent="
+                        addComment(), changeAssessmentNo(), getPhoneComments()
+                    "
+                >
+                    Отправить комментарий
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Закрыть
+                </button>
+            </template>
+        </PopupDispute>
+        <AlertStatus>
+            <template v-slot:headerAlertStatus>
+                Оценка диалога с номером: {{ editPhone }}
+            </template>
+            <template v-slot:bodyAlertStatus>
+                <p>Вы действительно принимаете данную оценку?</p>
+            </template>
+            <template v-slot:footerAlertStatus>
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    data-bs-dismiss="modal"
+                    @click.prevent="changeAssessmentOk()"
+                >
+                    Да
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Закрыть
+                </button>
+            </template>
+        </AlertStatus>
     </div>
 </template>
 
 <script>
 import PopupControl from "./popup/PopupControl.vue";
+import PopupDispute from "./popup/PopupDispute.vue";
+import AlertStatus from "./popup/AlertStatus.vue";
 
 export default {
     name: "ControlComponent",
 
     components: {
         PopupControl,
+        PopupDispute,
+        AlertStatus,
     },
 
     props: {
@@ -286,12 +476,14 @@ export default {
             upYear: 2022,
             editIdCall: "",
             editPhone: "",
+            oldStatus: "",
             controlChecks: [],
             phoneComments: [],
             phoneRecords: "",
             checkVisible: true,
             userPerPage: 10,
             pageNumber: 1,
+            commentDispute: "",
         };
     },
 
@@ -305,6 +497,10 @@ export default {
             let from = (this.pageNumber - 1) * this.userPerPage;
             let to = from + this.userPerPage;
             return this.controls.slice(from, to);
+        },
+        //Выключение кнопки добавление комментариев
+        isDisabledAddComment() {
+            return this.commentDispute;
         },
     },
 
@@ -336,10 +532,11 @@ export default {
                 });
         },
         //Получаем ID звонка
-        takeIdCall(IdCall, phoneClient) {
+        takeIdCall(IdCall, phoneClient, IdStatus) {
             this.checkVisible = true;
             this.editIdCall = IdCall;
             this.editPhone = phoneClient;
+            this.oldStatus = IdStatus;
         },
 
         isTakeIdCall(IdCall) {
@@ -399,7 +596,7 @@ export default {
                     .catch((error) => {
                         console.log(error);
                     });
-            }, 200);
+            }, 100);
         },
         //Получаем запись разговоров
         getPhoneRecords() {
@@ -424,6 +621,63 @@ export default {
                     });
             }, 50);
         },
+        //Добавление комментариев оператором
+        addComment() {
+            axios
+                .post(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_SetAssessmentComment.php",
+                    {
+                        IdCall: `${this.editIdCall}`,
+                        IdOktell: `${this.authoperator.IdOperator}`,
+                        TimeMark: "00:00:00",
+                        Comment: this.commentDispute,
+                        Markup: 0,
+                    }
+                )
+                .then(() => {
+                    this.commentDispute = "";
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
+        },
+        //Смена оценки оператором на "Принял"
+        changeAssessmentOk() {
+            axios
+                .post(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_SetAssessmentStatus.php",
+                    {
+                        IdCall: `${this.editIdCall}`,
+                        oldStatus: `${this.oldStatus}`,
+                        newStatus: 2,
+                    }
+                )
+                .then(() => {
+                    this.getControls();
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
+        },
+        //Смена оценки оператором на "Не согласен"
+        changeAssessmentNo() {
+            axios
+                .post(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_SetAssessmentStatus.php",
+                    {
+                        IdCall: `${this.editIdCall}`,
+                        oldStatus: `${this.oldStatus}`,
+                        newStatus: 3,
+                    }
+                )
+                .then(() => {
+                    this.getControls();
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
+        },
+
         //Включаем чек-лист в модалке
         swapTablesCheck() {
             this.checkVisible = true;

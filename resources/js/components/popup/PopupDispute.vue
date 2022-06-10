@@ -2,7 +2,7 @@
     <div>
         <div
             class="modal fade"
-            id="modal-phone-comment"
+            id="modal-dispute"
             tabindex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
@@ -11,7 +11,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
-                            Чек-лист по номеру:
+                            <slot name="headerDispute"></slot>
                         </h5>
                         <button
                             type="button"
@@ -21,23 +21,21 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        <slot></slot>
+                        <slot name="bodyDispute"></slot>
                     </div>
                     <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Close
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-success"
-                            @click="startCommentInPopup"
-                        >
-                            Отобразить комментарии
-                        </button>
+                        <slot name="footerDispute">
+                            <button type="button" class="btn btn-primary">
+                                Reload
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Close
+                            </button>
+                        </slot>
                     </div>
                 </div>
             </div>
@@ -47,7 +45,7 @@
 
 <script>
 export default {
-    name: "PopupComment",
+    name: "PopupDispute",
 
     data() {
         return {};

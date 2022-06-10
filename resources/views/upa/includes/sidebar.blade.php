@@ -30,6 +30,14 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{route('upa.journal.index')}}" class="nav-link">
+                    <i class="nav-icon fas fa-book-open"></i>
+                    <p>
+                        Журнал
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{route('upa.helper.index')}}" class="nav-link">
                     <i class="nav-icon fas fa-question"></i>
                     <p>

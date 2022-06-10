@@ -37,6 +37,10 @@ Route::group(['namespace' => 'App\Http\Controller\Upa', 'prefix' => 'upa', 'midd
         Route::get('/', \App\Http\Controllers\Upa\Control\IndexController::class)->name('upa.control.index');
     });
 
+    Route::group(['namespace' => '\App\Http\Controllers\Upa\Journal', 'prefix' => 'journals'], function () {
+        Route::get('/', \App\Http\Controllers\Upa\Journal\IndexController::class)->name('upa.journal.index');
+    });
+
     Route::group(['namespace' => '\App\Http\Controllers\Upa\Helper', 'prefix' => 'helpers'], function () {
         Route::get('/', \App\Http\Controllers\Upa\Helper\IndexController::class)->name('upa.helper.index');
     });
