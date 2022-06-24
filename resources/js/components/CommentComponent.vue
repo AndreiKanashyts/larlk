@@ -60,7 +60,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="comment in paginatedComments" :key="comment.id">
+                <tr v-for="comment in comments" :key="comment.number">
                     <th>{{ comment.number }}</th>
                     <td>{{ comment.date.date | date }}</td>
                     <td>{{ comment.name }}</td>
@@ -69,23 +69,6 @@
                 </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li
-                    class="page-item"
-                    v-for="page in pages"
-                    :key="page"
-                    :class="{ 'page-item active': page === pageNumber }"
-                    @click.prevent="pageClick(page)"
-                >
-                    <ul class="page-link">
-                        {{
-                            page
-                        }}
-                    </ul>
-                </li>
-            </ul>
-        </nav>
     </div>
 </template>
 
@@ -93,27 +76,19 @@
 export default {
     name: "CommentComponent",
 
-    props: ["authoperator"],
+    props: {
+        authoperator: {
+            type: Object,
+            default: "",
+        },
+    },
 
     data() {
         return {
             comments: "",
-            userPerPage: 5,
-            pageNumber: 1,
             upMonth: 1,
             upYear: 2022,
         };
-    },
-
-    computed: {
-        pages() {
-            return Math.ceil(this.comments.length / 5);
-        },
-        paginatedComments() {
-            let from = (this.pageNumber - 1) * this.userPerPage;
-            let to = from + this.userPerPage;
-            return this.comments.slice(from, to);
-        },
     },
 
     mounted() {
@@ -141,9 +116,6 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
-        },
-        pageClick(page) {
-            this.pageNumber = page;
         },
         getNewDate() {
             let dateNaw = new Date();

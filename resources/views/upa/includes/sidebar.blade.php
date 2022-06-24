@@ -30,6 +30,14 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{route('upa.motivation.index')}}" class="nav-link">
+                    <i class="nav-icon fas fa-fist-raised"></i>
+                    <p>
+                        Мотивация
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{route('upa.journal.index')}}" class="nav-link">
                     <i class="nav-icon fas fa-book-open"></i>
                     <p>

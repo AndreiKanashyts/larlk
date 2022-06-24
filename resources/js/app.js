@@ -4,9 +4,11 @@ import FirstComponent from "./components/FirstComponent";
 import CommentComponent from "./components/CommentComponent";
 import ControlComponent from "./components/ControlComponent";
 import JournalComponent from "./components/JournalComponent";
+import MotivationComponent from "./components/MotivationComponent";
 import HelperComponent from "./components/HelperComponent";
 import PopupControl from "./components/popup/PopupControl";
 import PopupDispute from "./components/popup/PopupDispute";
+import PopupMotivation from "./components/popup/PopupMotivation";
 import AlertStatus from "./components/popup/AlertStatus";
 
 require("./bootstrap");
@@ -21,9 +23,11 @@ const app = new Vue({
         CommentComponent,
         ControlComponent,
         JournalComponent,
+        MotivationComponent,
         HelperComponent,
         PopupControl,
         PopupDispute,
+        PopupMotivation,
         AlertStatus,
     },
 });

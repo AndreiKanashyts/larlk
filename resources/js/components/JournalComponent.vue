@@ -264,34 +264,32 @@ export default {
         },
         //Получаем запись разговоров
         getPhoneRecords() {
-            setTimeout(() => {
-                this.phoneRecords = "";
-                var link = "";
-                switch (this.TypeCallRadioOptions) {
-                    case "optionAllCall":
-                        link =
-                            "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAudio.php";
-                        break;
-                    case "optionVoiceMail":
-                        link =
-                            "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAudioVoiceMail.php";
-                        break;
-                }
-                axios
-                    .get(link, {
-                        params: {
-                            IdCall: `${this.editIdCall}`,
-                            login: `${this.authoperator.LoginOperator}`,
-                        },
-                    })
-                    .then((response) => {
-                        let link = "data:audio/ogg;base64," + response.data;
-                        this.phoneRecords = link;
-                    })
-                    .catch((error) => {
-                        console.log(error.response);
-                    });
-            }, 50);
+            this.phoneRecords = "";
+            var link = "";
+            switch (this.TypeCallRadioOptions) {
+                case "optionAllCall":
+                    link =
+                        "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAudio.php";
+                    break;
+                case "optionVoiceMail":
+                    link =
+                        "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAudioVoiceMail.php";
+                    break;
+            }
+            axios
+                .get(link, {
+                    params: {
+                        IdCall: `${this.editIdCall}`,
+                        login: `${this.authoperator.LoginOperator}`,
+                    },
+                })
+                .then((response) => {
+                    let link = "data:audio/ogg;base64," + response.data;
+                    this.phoneRecords = link;
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
         },
         //Выбор страницы
         pageClick(page) {

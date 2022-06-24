@@ -60,6 +60,19 @@
                         oncontextmenu="return false"
                         preload="metadata"
                     ></audio>
+                    <audio
+                        :src="phoneRecordsChainSwitch"
+                        :class="
+                            this.phoneRecordsChainSwitch.length > 30
+                                ? ''
+                                : 'd-none'
+                        "
+                        autoplay="autoplay"
+                        controls
+                        controlsList="nodownload"
+                        oncontextmenu="return false"
+                        preload="metadata"
+                    ></audio>
                 </td>
             </tr>
         </table>
@@ -100,7 +113,8 @@
                                         control.phoneClient
                                     ),
                                         getControlCheck(control.IdCall),
-                                        getPhoneComments(control.IdCall)
+                                        getPhoneComments(control.IdCall),
+                                        getChainSwitch(control.IdCall)
                                 "
                             >
                                 Подробнее
@@ -277,7 +291,10 @@
                         </tr>
                     </tbody>
                 </table>
-                <table class="table table-bordered" v-else>
+                <table
+                    class="table table-bordered"
+                    v-else-if="checkCommentVisible"
+                >
                     <thead>
                         <tr>
                             <th scope="col">Дата</th>
@@ -304,7 +321,100 @@
                         </tr>
                     </tbody>
                 </table>
-                <div :class="{ 'd-none': checkVisible === true }" class="mb-3">
+                <table class="table table-bordered" v-else>
+                    <thead>
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">Дата</th>
+                            <th scope="col">ФИО оператора</th>
+                            <th scope="col">Ознакомиться</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="chainSwitch in chainSwitches"
+                            :key="chainSwitch.number"
+                        >
+                            <td>{{ chainSwitch.number }}</td>
+                            <td>
+                                {{ chainSwitch.dateTime | date("datetime") }}
+                            </td>
+                            <td>{{ chainSwitch.fullName }}</td>
+                            <td>
+                                <button
+                                    :class="{
+                                        'd-none': chainSwitch.type === 1,
+                                    }"
+                                    class="btn btn-outline-info"
+                                    type="button"
+                                    data-bs-dismiss="modal"
+                                    @click.prevent="
+                                        takeIdObject(chainSwitch.IdObject),
+                                            getPhoneRecordsChainSwitch(
+                                                chainSwitch.IdObject
+                                            )
+                                    "
+                                >
+                                    Прослушать
+                                </button>
+                                <div
+                                    :class="{
+                                        'd-none': chainSwitch.type === 0,
+                                    }"
+                                    class="btn-group"
+                                >
+                                    <a
+                                        role="button"
+                                        class="btn btn-outline-info"
+                                        :href="`https://sp-oktell-stat1.patio-minsk.by/ChatCard/?id=&quot;${chainSwitch.IdObject}&quot;`"
+                                        target="_blank"
+                                    >
+                                        Прочитать
+                                    </a>
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-info dropdown-toggle dropdown-toggle-split"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <span class="visually-hidden"
+                                            >Переключатель выпадающего
+                                            списка</span
+                                        >
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                :href="`https://sp-oktell-stat1.patio-minsk.by/ChatCard/?id=&quot;${chainSwitch.IdObject}&quot;`"
+                                                target="_blank"
+                                            >
+                                                Открыть в браузере
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                :href="`https://app.jivo.ru/chat/archive/${chainSwitch.chat_Id}_chat-490834-${chainSwitch.chat_Id}`"
+                                                target="_blank"
+                                            >
+                                                Открыть в Jivo
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div
+                    :class="{
+                        'd-none':
+                            checkVisible === true ||
+                            checkCommentVisible === false,
+                    }"
+                    class="mb-3"
+                >
                     <label for="exampleFormControlTextarea1" class="form-label"
                         >Введите ваш комментарий:</label
                     >
@@ -343,6 +453,19 @@
                     @click.prevent="swapTablesComment"
                 >
                     Комментарии
+                </button>
+                <button
+                    v-for="chainSwitch in chainSwitches"
+                    :key="chainSwitch.number"
+                    :class="{ 'd-none': chainSwitch.number !== 1 }"
+                    type="button"
+                    class="btn btn-warning"
+                    @click.prevent="
+                        swapTablesCheckComment(),
+                            takeIdObject(chainSwitch.IdObject)
+                    "
+                >
+                    Связанные коммутациии
                 </button>
                 <button
                     type="button"
@@ -479,8 +602,12 @@ export default {
             oldStatus: "",
             controlChecks: [],
             phoneComments: [],
+            chainSwitches: [],
             phoneRecords: "",
+            phoneRecordsChainSwitch: "",
+            editIdCallChainSwitch: "",
             checkVisible: true,
+            checkCommentVisible: false,
             userPerPage: 10,
             pageNumber: 1,
             commentDispute: "",
@@ -538,6 +665,10 @@ export default {
             this.editPhone = phoneClient;
             this.oldStatus = IdStatus;
         },
+        //Получаем ID звонка связанной коммутации
+        takeIdObject(IdObject) {
+            this.editIdCallChainSwitch = IdObject;
+        },
 
         isTakeIdCall(IdCall) {
             return this.editIdCall === IdCall;
@@ -545,81 +676,116 @@ export default {
 
         //Данные из API чек-лист
         getControlCheck() {
-            setTimeout(() => {
-                axios
-                    .get(
-                        "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAssessmentCheckList.php",
-                        {
-                            params: {
-                                IdCall: `${this.editIdCall}`,
-                            },
-                        }
-                    )
-                    .then((response) => {
-                        this.controlChecks = response.data;
-                    })
-                    .catch((error) => {
-                        console.log(error.response);
-                    });
-            }, 50);
+            axios
+                .get(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAssessmentCheckList.php",
+                    {
+                        params: {
+                            IdCall: `${this.editIdCall}`,
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.controlChecks = response.data;
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
         },
         //Данные из API комментарии
         getPhoneComments() {
-            setTimeout(() => {
-                axios
-                    .get(
-                        "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetComment.php",
-                        {
-                            params: {
-                                IdCall: `${this.editIdCall}`,
-                            },
-                        }
-                    )
-                    .then((response) => {
-                        const phoneComments = response.data;
-                        this.phoneComments = phoneComments.map(
-                            (phoneComment) => {
-                                return {
-                                    ...phoneComment,
-                                    classMarcup:
-                                        phoneComment.markup === 1
-                                            ? "table-danger"
-                                            : phoneComment.markup === 2
-                                            ? "table-warning"
-                                            : phoneComment.markup === 3
-                                            ? "table-info"
-                                            : "",
-                                };
-                            }
-                        );
-                    })
-                    .catch((error) => {
-                        console.log(error);
+            axios
+                .get(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetComment.php",
+                    {
+                        params: {
+                            IdCall: `${this.editIdCall}`,
+                        },
+                    }
+                )
+                .then((response) => {
+                    const phoneComments = response.data;
+                    this.phoneComments = phoneComments.map((phoneComment) => {
+                        return {
+                            ...phoneComment,
+                            classMarcup:
+                                phoneComment.markup === 1
+                                    ? "table-danger"
+                                    : phoneComment.markup === 2
+                                    ? "table-warning"
+                                    : phoneComment.markup === 3
+                                    ? "table-info"
+                                    : "",
+                        };
                     });
-            }, 100);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        //Данные из API связанные коммутации
+        getChainSwitch() {
+            axios
+                .get(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetLinkObject.php",
+                    {
+                        params: {
+                            IdParentObject: `${this.editIdCall}`,
+                            Section: "1",
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.chainSwitches = response.data;
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
         },
         //Получаем запись разговоров
         getPhoneRecords() {
-            setTimeout(() => {
-                this.phoneRecords = "";
-                axios
-                    .get(
-                        "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAudio.php",
-                        {
-                            params: {
-                                IdCall: `${this.editIdCall}`,
-                                login: `${this.authoperator.LoginOperator}`,
-                            },
-                        }
-                    )
-                    .then((response) => {
-                        let link = "data:audio/ogg;base64," + response.data;
-                        this.phoneRecords = link;
-                    })
-                    .catch((error) => {
-                        console.log(error.response);
-                    });
-            }, 50);
+            this.phoneRecords = "";
+            axios
+                .get(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAudio.php",
+                    {
+                        params: {
+                            IdCall: `${this.editIdCall}`,
+                            login: `${this.authoperator.LoginOperator}`,
+                        },
+                    }
+                )
+                .then((response) => {
+                    let link = "data:audio/ogg;base64," + response.data;
+                    this.phoneRecords = link;
+                    this.phoneRecordsChainSwitch = "";
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
+        },
+        //Получаем запись разговоров связанной коммутации
+        getPhoneRecordsChainSwitch() {
+            this.phoneRecordsChainSwitch = "";
+            axios
+                .get(
+                    "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetAudio.php",
+                    {
+                        params: {
+                            IdCall: `${this.editIdCallChainSwitch}`,
+                            login: `${this.authoperator.LoginOperator}`,
+                        },
+                    }
+                )
+                .then((response) => {
+                    let linkChainSwitch =
+                        "data:audio/ogg;base64," + response.data;
+                    this.phoneRecordsChainSwitch = linkChainSwitch;
+                    this.phoneRecords = "";
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
         },
         //Добавление комментариев оператором
         addComment() {
@@ -681,10 +847,17 @@ export default {
         //Включаем чек-лист в модалке
         swapTablesCheck() {
             this.checkVisible = true;
+            this.checkCommentVisible = false;
         },
         //Включаем комментарии в модалке
         swapTablesComment() {
             this.checkVisible = false;
+            this.checkCommentVisible = true;
+        },
+        //Включаем связанные коммутации в модалке
+        swapTablesCheckComment() {
+            this.checkVisible = false;
+            this.checkCommentVisible = false;
         },
         //Выбор страницы
         pageClick(page) {
