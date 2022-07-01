@@ -132,6 +132,11 @@
                             <ul class="dropdown-menu">
                                 <li class="ml-3">
                                     <button
+                                        :class="{
+                                            'd-none':
+                                                authoperator.Role ===
+                                                'controller',
+                                        }"
                                         type="button"
                                         :disabled="
                                             control.IdStatus === 2 ||
@@ -155,9 +160,38 @@
                                     >
                                         Принять
                                     </button>
+                                    <button
+                                        :class="{
+                                            'd-none':
+                                                authoperator.Role === 'user',
+                                        }"
+                                        type="button"
+                                        :disabled="
+                                            control.IdStatus === 2 ||
+                                            control.IdStatus === 5
+                                        "
+                                        class="btn btn-outline-success"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#alertControlStatus"
+                                        @click.prevent="
+                                            takeIdCall(
+                                                control.IdCall,
+                                                control.phoneClient,
+                                                control.IdStatus
+                                            ),
+                                                getPhoneComments(control.IdCall)
+                                        "
+                                    >
+                                        Принять
+                                    </button>
                                 </li>
                                 <li class="ml-3 mt-1">
                                     <button
+                                        :class="{
+                                            'd-none':
+                                                authoperator.Role ===
+                                                'controller',
+                                        }"
                                         type="button"
                                         :disabled="
                                             control.IdStatus === 2 ||
@@ -167,6 +201,31 @@
                                             control.IdStatus === 6 ||
                                             control.IdStatus === 7 ||
                                             control.IdStatus === 8
+                                        "
+                                        class="btn btn-outline-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-dispute"
+                                        @click.prevent="
+                                            takeIdCall(
+                                                control.IdCall,
+                                                control.phoneClient,
+                                                control.IdStatus
+                                            ),
+                                                getPhoneComments(control.IdCall)
+                                        "
+                                    >
+                                        Не согласен
+                                    </button>
+                                    <button
+                                        :class="{
+                                            'd-none':
+                                                authoperator.Role === 'user',
+                                        }"
+                                        type="button"
+                                        :disabled="
+                                            control.IdStatus === 2 ||
+                                            control.IdStatus === 4 ||
+                                            control.IdStatus === 5
                                         "
                                         class="btn btn-outline-danger"
                                         data-bs-toggle="modal"
@@ -481,7 +540,8 @@
                 Информация по номеру: {{ editPhone }}
             </template>
             <template v-slot:bodyDispute>
-                <table class="table table-bordered">
+                <p class="center" v-if="!phoneComments.length"></p>
+                <table class="table table-bordered" v-else>
                     <thead>
                         <tr>
                             <th scope="col">Дата</th>
@@ -528,6 +588,7 @@
                     :disabled="!isDisabledAddComment"
                     type="button"
                     class="btn btn-danger"
+                    data-bs-dismiss="modal"
                     @click.prevent="
                         addComment(), changeAssessmentNo(), getPhoneComments()
                     "
@@ -548,6 +609,34 @@
                 Оценка диалога с номером: {{ editPhone }}
             </template>
             <template v-slot:bodyAlertStatus>
+                <p class="center" v-if="!phoneComments.length"></p>
+                <table class="table table-bordered" v-else>
+                    <thead>
+                        <tr>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Автор</th>
+                            <th scope="col">Временная метка</th>
+                            <th scope="col">Комментарий</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="phoneComment in phoneComments"
+                            :key="phoneComment.id"
+                            :class="[phoneComment.classMarcup]"
+                        >
+                            <td>
+                                {{
+                                    phoneComment.dateTime.date
+                                        | date("datetime")
+                                }}
+                            </td>
+                            <td>{{ phoneComment.fullName }}</td>
+                            <td>{{ phoneComment.timeMark }}</td>
+                            <td>{{ phoneComment.comment }}</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <p>Вы действительно принимаете данную оценку?</p>
             </template>
             <template v-slot:footerAlertStatus>
@@ -699,6 +788,7 @@ export default {
                     "https://sp-oktell-stat1.patio-minsk.by/SSA_Integration_External_System/integration/PA_GetComment.php",
                     {
                         params: {
+                            IdOperator: `${this.authoperator.IdOperator}`,
                             IdCall: `${this.editIdCall}`,
                         },
                     }
@@ -815,7 +905,10 @@ export default {
                     {
                         IdCall: `${this.editIdCall}`,
                         oldStatus: `${this.oldStatus}`,
-                        newStatus: 2,
+                        newStatus:
+                            `${this.authoperator.Role}` === "controller"
+                                ? 5
+                                : 2,
                     }
                 )
                 .then(() => {
@@ -833,7 +926,10 @@ export default {
                     {
                         IdCall: `${this.editIdCall}`,
                         oldStatus: `${this.oldStatus}`,
-                        newStatus: 3,
+                        newStatus:
+                            `${this.authoperator.Role}` === "controller"
+                                ? 4
+                                : 3,
                     }
                 )
                 .then(() => {

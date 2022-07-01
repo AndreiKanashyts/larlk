@@ -12,7 +12,8 @@ class IndexController extends Controller
     {
         $auth_operator = [
             'IdOperator' => Auth::user()->idoperator,
-            'LoginOperator' => Auth::user()->email
+            'LoginOperator' => Auth::user()->email,
+            'Role' => Auth::user()->role
         ];
 
         return view('upa.helpers.index', [
