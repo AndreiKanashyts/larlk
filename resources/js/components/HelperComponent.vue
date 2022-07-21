@@ -1,7 +1,11 @@
 <template>
     <div>
         <iframe
-            src="https://sp-oktell-stat1.patio-minsk.by/patioHelperUPA/"
+            :src="
+                `https://sp-oktell-stat1.patio-minsk.by/patioHelperUPA/?random=` +
+                new Date().getTime() +
+                Math.floor(Math.random() * 1000000)
+            "
         ></iframe>
     </div>
 </template>
